@@ -68,28 +68,7 @@ def set_optimizer(optimizer_name , **kwargs):
         setattr(optimizer , k  , v )
     return optimizer
 
-
-def set_classifier(hidden_layer_num  , hidden_df = None):
-    if hidden_layer_num == 0:
-        classifier = keras.Sequential([
-            layers.Dense(2 , activation= 'softmax' , name = 'output')
-            ])
-    if hidden_layer_num == 1:
-        classifier = keras.Sequential([
-            layers.Dense(hidden_df['hidden_1']),
-            layers.Dropout(hidden_df['dropout_1']),
-            layers.Dense(2, activation='softmax', name='output')
-        ])
-    if hidden_layer_num == 2 :
-        classifier = keras.Sequential([
-            layers.Dense(hidden_df['hidden_1']),
-            layers.Dropout(hidden_df['droput_1']),
-            layers.Dense(hidden_df['hidden_2']),
-            layers.Dropout(hidden_df['dropout_2']),
-            layers.Dense(2, activation='softmax', name='output')
-        ])
-    return classifier
-
+# train , val acc , loss를 그리는 함수
 def save_plot(metrics , ex_name):
     fig , loss_ax = plt.subplots(figsize = (10, 6))
     du_ax = loss_ax.twinx()
@@ -101,12 +80,10 @@ def save_plot(metrics , ex_name):
     loss_ax.set_ylabel('Loss' )
     du_ax.set_ylabel('Acc' ) 
 
-    #범례 그리기 파트
+    #make_legend
     handles , labels = du_ax.get_legend_handles_labels()
     legend1 = du_ax.legend(handles = handles , labels = labels , ncol = 2 , 
                      loc = 'upper left' , frameon=True)
     loss_ax.grid(axis="both", c="lightgray")
     fig.savefig(f'../artifact/{ex_name}_pred_val_plot.png', dpi=600 ,bbox_inches='tight')
-    fig
     plt.close(fig)
-    # plt.show()

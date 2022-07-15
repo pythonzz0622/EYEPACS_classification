@@ -2,7 +2,7 @@ from tensorflow.keras.layers import Input , GlobalAveragePooling2D
 from tensorflow.keras.models import Model
 import tensorflow as tf
 
-
+#inception model loading
 class InceptionV3(tf.keras.Model):
     def __init__(self , classifier ):
         super(InceptionV3, self).__init__()
@@ -18,12 +18,6 @@ class InceptionV3(tf.keras.Model):
         self.pool = GlobalAveragePooling2D()
         ##ouput 2048
         self.classifier = classifier
-
-        # self.classifier = keras.Sequential([
-        #
-        #     Dropout(0.5),
-        #     Dense(2, activation='softmax', name='output')
-        # ])
 
     def call(self, inputs):
         x = self.model(inputs)

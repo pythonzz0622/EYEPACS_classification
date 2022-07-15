@@ -28,6 +28,12 @@ class Make_generator():
         self.transform_val = transfrom_val
         self.fold = fold
 
+    def __doc__(self):
+        '''
+        make_tfrecord방식으로 만든 tfrecord를 읽어오고 generator를 생성하는class
+        '''
+
+    #image를 받아서 aug_img로 return해주는 함수
     def aug_fn(self , image ):
         data = {"image": image}
         aug_data = self.transform_train(**data)
@@ -42,7 +48,7 @@ class Make_generator():
         aug_img = tf.cast(aug_img / 255.0, tf.float32)
         return aug_img
 
-    ## tfrecord file을 data로 parsing해주는 function
+    # tfrecord file을 data로 parsing해주는 function
     def _parse_function(self , tfrecord_serialized):
         features = {'image': tf.io.FixedLenFeature([], tf.string),
                     'cls_num': tf.io.FixedLenFeature([], tf.int64)
@@ -57,7 +63,6 @@ class Make_generator():
 
         return aug_img, label
 
-    ## tfrecord file을 data로 parsing해주는 function
     def _parse_function_test(self , tfrecord_serialized):
         features = {'image': tf.io.FixedLenFeature([], tf.string),
                     'cls_num': tf.io.FixedLenFeature([], tf.int64)
@@ -73,6 +78,7 @@ class Make_generator():
 
         return aug_img, label
 
+    #dataset을 loding
     def load(self ):
         tfr_data = self.tfr_data
         tfr_val = tfr_data[self.fold-1]
