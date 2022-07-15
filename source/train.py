@@ -49,6 +49,7 @@ train_generator , val_generator = make_generator.load()
 
 
 ## model 정의 부분
+'''
 layers_list = []
 for k , v in  classifier_args.items():
     if k.split('_')[1] == 'hidden':
@@ -57,7 +58,11 @@ for k , v in  classifier_args.items():
         layer = layers.Dropout(v)
 layers_list.append(layer)
 classifier = keras.Sequential(layers_list)
-
+'''
+classifier = keras.Sequential([
+                                            layers.Dropout(0.5) , 
+                                            layers.Dense(2 , activation= 'softmax' , name = 'output')
+                                            ])
 
 model = model.InceptionV3(classifier = classifier)
 
@@ -69,12 +74,9 @@ loss_function = tf.keras.losses.SparseCategoricalCrossentropy()
 def train_step(images, labels):
     with tf.GradientTape() as tape:
         pred = model(images, training=True)
-        # 손실
         loss = loss_function(labels, pred)
-    # 미분 계산
-    gradients = tape.gradient(loss, model.trainable_weights)
 
-    # optimizer
+    gradients = tape.gradient(loss, model.trainable_weights)
     optimizer.apply_gradients(zip(gradients, model.trainable_weights))
     correct = (tf.math.argmax(pred , axis = 1 ) == labels)
     return loss , correct
@@ -84,7 +86,6 @@ def train_step(images, labels):
 def val_step(images, labels):
 
     pred = model(images, training=False)
-    # 손실
     loss = loss_function(labels, pred)
     correct = (tf.math.argmax(pred , axis = 1 ) == labels)
     return loss , correct
@@ -110,8 +111,6 @@ for epoch in range(1 ,150):
         size += labels.shape[0]
         train_loss += loss.numpy().sum()
         train_acc += correct.numpy().sum()
-
-#         print(f'train_loss : {loss.numpy().sum()} ')
 
     train_loss /= (i+1)
     train_acc /= size
@@ -143,7 +142,7 @@ for epoch in range(1 ,150):
                         'classifier' : classifier
                         }
         best_model = model
-        # best_model.save_weights(os.path.join('../models', 'DRD_{}.h5'.format(epoch)))ss
+        # best_model.save_weights(os.path.join('../models', 'DRD_{}.h5'.format(epoch)))
 
     train_loss_list.append(train_loss)
     train_acc_list.append(train_acc)
@@ -167,7 +166,6 @@ with mlflow.start_run() as run:
     mlflow.log_metrics(best_metric)
     mlflow.log_params( classifier_args)
 #     mlflow.tensorflow.save_model('../')
-    
 #     mlflow.tensorflow.save_model(tf_saved_model_dir = '../models/' , tf_meta_graph_tags = )
 
 mlflow.end_run()
