@@ -3,6 +3,8 @@ import tensorflow.keras.optimizers as optimizers
 import tensorflow.keras as keras
 import tensorflow.keras.layers as layers
 import matplotlib.pyplot as plt 
+import cv2 
+import os 
 
 SGD = optimizers.SGD(
     learning_rate=0.01,
@@ -69,7 +71,7 @@ def set_optimizer(optimizer_name , **kwargs):
     return optimizer
 
 # train , val acc , loss를 그리는 함수
-def save_plot(metrics , ex_name):
+def save_plot(metrics , ex_name , dir ):
     fig , loss_ax = plt.subplots(figsize = (10, 6))
     du_ax = loss_ax.twinx()
     loss_ax.plot(metrics['train_loss'] ,'y' , label  = 'Train Loss')
@@ -84,6 +86,26 @@ def save_plot(metrics , ex_name):
     handles , labels = du_ax.get_legend_handles_labels()
     legend1 = du_ax.legend(handles = handles , labels = labels , ncol = 2 , 
                      loc = 'upper left' , frameon=True)
+
+    handles , labels = loss_ax.get_legend_handles_labels()
+    legend1 = loss_ax.legend(handles = handles , labels = labels , ncol = 2 , 
+                     loc = 'lower left' , frameon=True)
+
     loss_ax.grid(axis="both", c="lightgray")
-    fig.savefig(f'../artifact/{ex_name}_pred_val_plot.png', dpi=600 ,bbox_inches='tight')
+    os.makedirs(dir , exist_ok= True)
+    fig.savefig(f'{dir}{ex_name}_pred_val_plot.png', dpi=600 ,bbox_inches='tight')
     plt.close(fig)
+
+
+def imgread(image_path , to_gray = False):
+    if to_gray == True:
+        image = cv2.imread(image_path ,  cv2.IMREAD_GRAYSCALE)
+    elif to_gray == False:
+        image = cv2.imread(image_path , cv2.IMREAD_COLOR )
+        image = cv2.cvtColor(image , cv2.COLOR_BGR2RGB)
+    return image 
+
+def find_boundary(x):
+    for idx , i in enumerate(x):
+        if i != 255:
+            return idx

@@ -1,7 +1,7 @@
 import os
 import albumentations as A
 import tensorflow as tf
-
+import numpy as np 
 def _bytes_feature(value):
     if isinstance(value, type(tf.constant(0))):
         value = value.numpy() # BytesList won't unpack a string from an EagerTensor.
@@ -35,6 +35,7 @@ class Make_generator():
 
     #image를 받아서 aug_img로 return해주는 함수
     def aug_fn(self , image ):
+        image = np.array(image).astype(np.uint8)
         data = {"image": image}
         aug_data = self.transform_train(**data)
         aug_img = aug_data["image"]
@@ -42,6 +43,7 @@ class Make_generator():
         return aug_img
 
     def aug_fn_test(self , image ):
+        image = np.array(image).astype(np.uint8)
         data = {"image": image}
         aug_data = self.transform_val(**data)
         aug_img = aug_data["image"]
