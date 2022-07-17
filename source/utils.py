@@ -1,5 +1,5 @@
 import tensorflow.keras.optimizers as optimizers
-# import tensorflow.keras.optimizers.experimental as experimental
+import tensorflow.keras.optimizers.experimental as experimental
 import tensorflow.keras as keras
 import tensorflow.keras.layers as layers
 import matplotlib.pyplot as plt 
@@ -46,24 +46,24 @@ Adamax = optimizers.Adamax(
     epsilon=1e-07,
     name='Adamax'
 )
-# AdamW = experimental.AdamW(
-#     learning_rate=0.001,
-#     weight_decay=0.004,
-#     beta_1=0.9,
-#     beta_2=0.999,
-#     epsilon=1e-07,
-#     amsgrad=False,
-#     clipnorm=None,
-#     clipvalue=None,
-#     global_clipnorm=None,
-#     use_ema=False,
-#     ema_momentum=0.99,
-#     ema_overwrite_frequency=None,
-#     jit_compile=True,
-#     name='AdamW'
-# )
+AdamW = experimental.AdamW(
+    learning_rate=0.001,
+    weight_decay=0.004,
+    beta_1=0.9,
+    beta_2=0.999,
+    epsilon=1e-07,
+    amsgrad=False,
+    clipnorm=None,
+    clipvalue=None,
+    global_clipnorm=None,
+    use_ema=False,
+    ema_momentum=0.99,
+    ema_overwrite_frequency=None,
+    jit_compile=True,
+    name='AdamW'
+)
 
-optimizer_dict = {'SGD' : SGD ,'RMSProp' : RMSProp  , 'Adam' : Adam , 'NAdam' : NAdam , 'Adamax' : Adamax }
+optimizer_dict = {'SGD' : SGD ,'RMSProp' : RMSProp  , 'Adam' : Adam , 'NAdam' : NAdam , 'Adamax' : Adamax  , 'AdamW' : AdamW}
 def set_optimizer(optimizer_name , **kwargs):
     optimizer =  optimizer_dict[optimizer_name]
     for k , v in kwargs.items():
