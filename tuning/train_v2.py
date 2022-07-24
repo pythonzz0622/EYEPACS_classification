@@ -25,7 +25,7 @@ RUN_NAME = args.run_name
 classifier_args = args.layers
 _addtag = args.addtag
 TAG = _addtag.split(':')
-EPOCH = 2
+EPOCH = 200
 LR = args.lr
 lr_schedule = keras.optimizers.schedules.ExponentialDecay(
     initial_learning_rate=LR,
@@ -76,16 +76,15 @@ trainer  = train_module.training(model , OPTIMIZER , LOSS_FN)
 
 
 mlflow.set_tracking_uri('./mlruns')
-mlflow.set_experiment(experiment_name= 'test')
+mlflow.set_experiment(experiment_name= 'set_optimization')
 mlflow.end_run()
 with mlflow.start_run(run_name = f'{args.optimizer}_{LR}') as run:
-    ##run train_module4
-    
+    ##run train_module
     best_model , best_metrics = trainer.training(train_generator , val_generator , EPOCH)
     mlflow.set_tag(TAG[0], TAG[1] )
     mlflow.log_artifacts('./artifact/')
     mlflow.log_metrics(best_metrics)
-    mlflow.keras.log_model(best_model , 'model')
+
     # mlflow.log_params( classifier_args)
 #     mlflow.tensorflow.save_model('../')
 #     mlflow.tensorflow.save_model(tf_saved_model_dir = '../models/' , tf_meta_graph_tags = )
