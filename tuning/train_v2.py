@@ -1,5 +1,5 @@
 import sys 
-sys.path.append('/home/user304/users/jiwon/PAI_EYEPACS/source')
+sys.path.append('../source')
 import tensorflow as tf
 import tensorflow.keras as keras
 import tensorflow.keras.layers as layers
@@ -40,7 +40,7 @@ LOSS_FN = tf.keras.losses.SparseCategoricalCrossentropy()
 transforms_train = A.Compose([
                             A.Resize(299, 299) ,
                             A.CLAHE(always_apply= True),
-                             A.RandomBrightness(),
+                            A.RandomBrightness(),
                             A.ImageCompression(quality_lower=85, quality_upper=100, p=0.5),
                             A.HueSaturationValue(hue_shift_limit=20, sat_shift_limit=30, val_shift_limit=20, p=0.5),
                             A.HorizontalFlip(),
@@ -76,10 +76,11 @@ trainer  = train_module.training(model , OPTIMIZER , LOSS_FN)
 
 
 mlflow.set_tracking_uri('./mlruns')
-mlflow.set_experiment(experiment_name= 'set_optimization')
+mlflow.set_experiment(experiment_name= 'testinput')
 mlflow.end_run()
 with mlflow.start_run(run_name = f'{args.optimizer}_{LR}') as run:
-    ##run train_module
+    ##run train_module4
+    
     best_model , best_metrics = trainer.training(train_generator , val_generator , EPOCH)
     mlflow.set_tag(TAG[0], TAG[1] )
     mlflow.log_artifacts('./artifact/')
