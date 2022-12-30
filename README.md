@@ -1,4 +1,4 @@
-# EYEPACS_practice
+# EYEPACS classification
 
 ##### 결과확인 [MLFLOW]
 
@@ -24,6 +24,7 @@
 
 
 source
+## 빠른 추론을 위해서 tfrecord로 dataset변환
 make_tfrecord -> data format을 tfrecord로 변환함, 독립적으로 실행 가능
 
 make_model.py -> inceptionV3 model 생성하는 package
